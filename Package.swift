@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "KSURver",
+    name: "Schedule-Server",
     dependencies: [
         .package(url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", from: "3.0.3"),
         .package(url:"https://github.com/PerfectlySoft/Perfect-MongoDB.git", from: "3.0.0"),
@@ -11,7 +11,7 @@ let package = Package(
         ],
     targets: [
         .target(
-            name: "KSURver",
+            name: "Schedule-Server",
             dependencies: ["PerfectHTTPServer", "PerfectMongoDB", "SwiftProtobuf"],
             path: "Sources"),
         ]

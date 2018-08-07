@@ -1,6 +1,6 @@
 //
 //  week.JSON.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 07.08.2018.
 //

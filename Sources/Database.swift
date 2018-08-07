@@ -1,13 +1,13 @@
 //
 //  Database.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 06.08.2018.
 //
 
 import PerfectMongoDB
 
-protocol ServDatabaseProtocol: class {
+protocol ServerDatabaseProtocol: class {
     
     var client: MongoClient { get }
     var db: MongoDatabase { get }
@@ -16,7 +16,7 @@ protocol ServDatabaseProtocol: class {
     
 }
 
-class ServDatabase: ServDatabaseProtocol {
+class ServerDatabase: ServerDatabaseProtocol {
     
     let client: MongoClient
     let db: MongoDatabase
@@ -56,7 +56,7 @@ extension MongoCollection {
             fatalError("\(error)")
         }
         
-        return arr.first
+        return arr
         
     }
 }

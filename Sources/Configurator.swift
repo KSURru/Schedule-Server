@@ -1,13 +1,13 @@
 //
 //  Configurator.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 06.08.2018.
 //
 
 import Foundation
 
-protocol ServConfiguratorProtocol: class {
+protocol ServerConfiguratorProtocol: class {
     
     var dbUri: String { get }
     var dbName: String { get }
@@ -16,16 +16,16 @@ protocol ServConfiguratorProtocol: class {
     var servAddress: String { get }
     var servPort: Int { get }
     
-    var routes: ServRoutesProtocol { get }
-    var launcher: ServLauncherProtocol { get }
-    var database: ServDatabaseProtocol { get }
-    var serializer: ServSerializerProtocol { get }
-    var sender: ServSenderProtocol { get }
-    var worker: ServWorkerProtocol { get }
+    var routes: ServerRoutesProtocol { get }
+    var launcher: ServerLauncherProtocol { get }
+    var database: ServerDatabaseProtocol { get }
+    var serializer: ServerSerializerProtocol { get }
+    var sender: ServerSenderProtocol { get }
+    var worker: ServerWorkerProtocol { get }
     
 }
 
-class ServConfigurator: ServConfiguratorProtocol {
+class ServerConfigurator: ServerConfiguratorProtocol {
     
     let dbUri = "mongodb://127.0.0.1:27017"
     let dbName = "test"
@@ -35,22 +35,22 @@ class ServConfigurator: ServConfiguratorProtocol {
     let servPort = 8081
     
     
-    let routes: ServRoutesProtocol
-    let launcher: ServLauncherProtocol
-    let database: ServDatabaseProtocol
-    let serializer: ServSerializerProtocol
-    let sender: ServSenderProtocol
-    let worker: ServWorkerProtocol
+    let routes: ServerRoutesProtocol
+    let launcher: ServerLauncherProtocol
+    let database: ServerDatabaseProtocol
+    let serializer: ServerSerializerProtocol
+    let sender: ServerSenderProtocol
+    let worker: ServerWorkerProtocol
     
     init() {
         
-        database = ServDatabase(uri: dbUri, db: dbName)
-        serializer = ServSerializer()
-        sender = ServSender()
-        worker = ServWorker(serializer: serializer)
+        database = ServerDatabase(uri: dbUri, db: dbName)
+        serializer = ServerSerializer()
+        sender = ServerSender()
+        worker = ServerWorker(serializer: serializer)
         
-        routes = ServRoutes(database: database, worker: worker, sender: sender)
-        launcher = ServLauncher(name: servName, address: servAddress, port: servPort, routes: routes.get())
+        routes = ServerRoutes(database: database, worker: worker, sender: sender)
+        launcher = ServerLauncher(name: servName, address: servAddress, port: servPort, routes: routes.get())
         
         launcher.launch()
         

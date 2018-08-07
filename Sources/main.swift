@@ -1,1 +1,1 @@
-_ = ServConfigurator()
+_ = ServerConfigurator()

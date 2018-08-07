@@ -1,6 +1,6 @@
 //
 //  Serializer.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 06.08.2018.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftProtobuf
 
-protocol ServSerializerProtocol: class {
+protocol ServerSerializerProtocol: class {
     
     func serializeLesson(id: Int32, title: String, subtitle: String, time: String, professor: String, type: String) -> Data?
     func serializeHeader(title: String) -> Data?
@@ -18,7 +18,7 @@ protocol ServSerializerProtocol: class {
     
 }
 
-class ServSerializer: ServSerializerProtocol {
+class ServerSerializer: ServerSerializerProtocol {
     
     func serializeLesson(id: Int32, title: String, subtitle: String, time: String, professor: String, type: String) -> Data? {
         

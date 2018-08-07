@@ -1,26 +1,26 @@
 //
 //  Worker.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 07.08.2018.
 //
 
 import Foundation
 
-protocol ServWorkerProtocol: class {
+protocol ServerWorkerProtocol: class {
     
-    var serializer: ServSerializerProtocol { get }
+    var serializer: ServerSerializerProtocol { get }
     
-    func contructSerializedWeek(with week: JSONGroup.JSONWeek) -> Data?
+    func constructSerializedWeek(with week: JSONGroup.JSONWeek) -> Data?
     
 }
 
 
-class ServWorker: ServWorkerProtocol {
+class ServerWorker: ServerWorkerProtocol {
     
-    let serializer: ServSerializerProtocol
+    let serializer: ServerSerializerProtocol
     
-    func contructSerializedWeek(with week: JSONGroup.JSONWeek) -> Data? {
+    func constructSerializedWeek(with week: JSONGroup.JSONWeek) -> Data? {
         
         var serializedDays = [Data]()
         
@@ -60,7 +60,7 @@ class ServWorker: ServWorkerProtocol {
         
     }
     
-    init(serializer: ServSerializerProtocol) {
+    init(serializer: ServerSerializerProtocol) {
         self.serializer = serializer
     }
     

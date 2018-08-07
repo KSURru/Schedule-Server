@@ -1,6 +1,6 @@
 //
 //  Launcher.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 06.08.2018.
 //
@@ -9,7 +9,7 @@ import PerfectLib
 import PerfectHTTP
 import PerfectHTTPServer
 
-protocol ServLauncherProtocol: class {
+protocol ServerLauncherProtocol: class {
     
     var server: HTTPServer.Server { get }
     
@@ -17,7 +17,7 @@ protocol ServLauncherProtocol: class {
     
 }
 
-class ServLauncher: ServLauncherProtocol {
+class ServerLauncher: ServerLauncherProtocol {
     
     let server: HTTPServer.Server
     
