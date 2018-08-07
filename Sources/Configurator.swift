@@ -20,7 +20,6 @@ protocol ServerConfiguratorProtocol: class {
     var launcher: ServerLauncherProtocol { get }
     var database: ServerDatabaseProtocol { get }
     var serializer: ServerSerializerProtocol { get }
-    var sender: ServerSenderProtocol { get }
     var worker: ServerWorkerProtocol { get }
     
 }
@@ -39,17 +38,15 @@ class ServerConfigurator: ServerConfiguratorProtocol {
     let launcher: ServerLauncherProtocol
     let database: ServerDatabaseProtocol
     let serializer: ServerSerializerProtocol
-    let sender: ServerSenderProtocol
     let worker: ServerWorkerProtocol
     
     init() {
         
         database = ServerDatabase(uri: dbUri, db: dbName)
         serializer = ServerSerializer()
-        sender = ServerSender()
         worker = ServerWorker(serializer: serializer)
         
-        routes = ServerRoutes(database: database, worker: worker, sender: sender)
+        routes = ServerRoutes(database: database, worker: worker)
         launcher = ServerLauncher(name: servName, address: servAddress, port: servPort, routes: routes.get())
         
         launcher.launch()

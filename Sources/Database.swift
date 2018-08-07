@@ -41,7 +41,7 @@ class ServerDatabase: ServerDatabaseProtocol {
 }
 
 extension MongoCollection {
-    func find(by: String) -> String? {
+    func find(by: String) -> [String?]? {
         
         var arr = [String]()
         

@@ -1,6 +1,6 @@
 //
 //  Routes.swift
-//  Serv
+//  Schedule-Server
 //
 //  Created by Nikita Arutyunov on 06.08.2018.
 //
@@ -8,11 +8,10 @@
 import PerfectLib
 import PerfectHTTP
 
-protocol ServRoutesProtocol: class {
+protocol ServerRoutesProtocol: class {
     
-    var db: ServDatabaseProtocol { get }
-    var worker: ServWorkerProtocol { get }
-    var sender: ServSenderProtocol { get }
+    var db: ServerDatabaseProtocol { get }
+    var worker: ServerWorkerProtocol { get }
     
     var routes: Routes { get set }
     
@@ -20,19 +19,17 @@ protocol ServRoutesProtocol: class {
     
 }
 
-class ServRoutes: ServRoutesProtocol {
+class ServerRoutes: ServerRoutesProtocol {
     
-    let db: ServDatabaseProtocol
-    let worker: ServWorkerProtocol
-    let sender: ServSenderProtocol
+    let db: ServerDatabaseProtocol
+    let worker: ServerWorkerProtocol
     
     var routes = Routes()
     
-    init(database: ServDatabaseProtocol, worker: ServWorkerProtocol, sender: ServSenderProtocol) {
+    init(database: ServerDatabaseProtocol, worker: ServerWorkerProtocol) {
         
         self.db = database
         self.worker = worker
-        self.sender = sender
         
         do {
             
