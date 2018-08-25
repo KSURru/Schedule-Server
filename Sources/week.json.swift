@@ -44,13 +44,13 @@ struct JSONGroup: Codable {
             
         }
         
-        let even: Int32
+        let even: Bool
         let days: [JSONDay]
         
     }
     
     let id: Int32
     let title: String
-    let week: JSONWeek
+    let weeks: [JSONWeek]
     
 }

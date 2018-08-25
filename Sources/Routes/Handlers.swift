@@ -23,28 +23,47 @@ extension ServerRoutes: ServerHandlersProtocol {
             
             guard let groupId = request.urlVariables["group_id"] else { return }
             guard let evenString = request.urlVariables["even"] else { return }
-            guard let even = Int(evenString) else { return }
+            guard let even = Bool(evenString) else { return }
             
             let collection = self.db.getCollection(name: "groups")
 
-            guard let jsonResults = collection.find(by: "{ \"id\": \(groupId), \"week.even\": \(even) }") else {
+            guard let jsonResults = collection.find(by: "{ \"id\": \(groupId) }") else {
 
-                response.setBody(string: "\(even == 0 ? "Not": "") Even Week At Group \(groupId) Not Found")
+                response.setBody(string: "\(!even ? "Not": "") Even Week At Group \(groupId) Not Found")
                 response.completed(status: HTTPResponseStatus.notFound)
+                
                 return
 
             }
             
-            guard let jsonGroup = jsonResults.first! else { return }
+            if jsonResults.count == 0 {
+                
+                response.setBody(string: "\(!even ? "Odd" : "Even") Week At Group \(groupId) Not Found")
+                response.completed(status: HTTPResponseStatus.notFound)
+                
+                return
+            }
             
+            guard let jsonGroup = jsonResults[0] else { return }
+                
             let group = try! JSONDecoder().decode(JSONGroup.self, from: jsonGroup.data(using: .utf8)!)
             
-            guard let serializedWeek = self.worker.constructSerializedWeek(with: group.week) else { return }
+            guard let week = group.weeks.first(where: { $0.even == even }) else { return }
+            
+            guard let serializedWeek = self.worker.constructSerializedWeek(with: week) else { return }
             
             response.setHeader(.contentType, value: "application/octet-stream")
             response.setBody(bytes: [UInt8](serializedWeek))
             
+//            let enc = JSONEncoder()
+//
+//            let jsonWeek = try! enc.encode(week)
+//
+//            response.setHeader(.contentType, value: "text/json")
+//            response.setBody(string: String(data: jsonWeek, encoding: .utf8)!)
+
             response.completed()
+            
         }
     }
     

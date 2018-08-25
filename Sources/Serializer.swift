@@ -14,7 +14,7 @@ protocol ServerSerializerProtocol: class {
     func serializeHeader(title: String) -> Data?
     func serializeSection(id: Int32, serializedHeader: Data, serializedLessons: [Data]) -> Data?
     func serializeDay(id: Int32, title: String, serializedSections: [Data]) -> Data?
-    func serializeWeek(even: Int32, serializedDays: [Data]) -> Data?
+    func serializeWeek(even: Bool, serializedDays: [Data]) -> Data?
     
 }
 
@@ -98,7 +98,7 @@ class ServerSerializer: ServerSerializerProtocol {
         
     }
     
-    func serializeWeek(even: Int32, serializedDays: [Data]) -> Data? {
+    func serializeWeek(even: Bool, serializedDays: [Data]) -> Data? {
         
         var week = Week()
         

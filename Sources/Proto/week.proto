@@ -26,6 +26,6 @@ message Week {
         repeated Section sections = 3;
     }
     
-    int32 even = 1;
+    bool even = 1;
     repeated Day days = 2;
 }

@@ -24,7 +24,7 @@ struct Week {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var even: Int32 = 0
+  var even: Bool = false
 
   var days: [Week.Day] = []
 
@@ -126,7 +126,7 @@ extension Week: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase,
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularInt32Field(value: &self.even)
+      case 1: try decoder.decodeSingularBoolField(value: &self.even)
       case 2: try decoder.decodeRepeatedMessageField(value: &self.days)
       default: break
       }
@@ -134,8 +134,8 @@ extension Week: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase,
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.even != 0 {
-      try visitor.visitSingularInt32Field(value: self.even, fieldNumber: 1)
+    if self.even != false {
+      try visitor.visitSingularBoolField(value: self.even, fieldNumber: 1)
     }
     if !self.days.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.days, fieldNumber: 2)
