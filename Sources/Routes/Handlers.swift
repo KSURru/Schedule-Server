@@ -67,4 +67,43 @@ extension ServerRoutes: ServerHandlersProtocol {
         }
     }
     
+    func getGroupHandler() throws -> RequestHandler {
+        return {
+            request, response in
+            
+            guard let groupId = request.urlVariables["group_id"] else { return }
+            
+            let collection = self.db.getCollection(name: "groups")
+            
+            guard let jsonResults = collection.find(by: "{ \"id\": \(groupId) }") else {
+                
+                response.setBody(string: "Group \(groupId) Not Found")
+                response.completed(status: HTTPResponseStatus.notFound)
+                
+                return
+                
+            }
+            
+            if jsonResults.count == 0 {
+                
+                response.setBody(string: "Group \(groupId) Not Found")
+                response.completed(status: HTTPResponseStatus.notFound)
+                
+                return
+            }
+            
+            guard let jsonGroup = jsonResults[0] else { return }
+            
+            let group = try! JSONDecoder().decode(JSONGroup.self, from: jsonGroup.data(using: .utf8)!)
+            
+            guard let serializedGroup = self.worker.constructSerializedGroup(with: group) else { return }
+            
+            response.setHeader(.contentType, value: "application/octet-stream")
+            response.setBody(bytes: [UInt8](serializedGroup))
+            
+            response.completed()
+            
+        }
+    }
+    
 }

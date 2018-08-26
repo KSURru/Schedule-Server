@@ -14,7 +14,8 @@ protocol ServerSerializerProtocol: class {
     func serializeHeader(title: String) -> Data?
     func serializeSection(id: Int32, serializedHeader: Data, serializedLessons: [Data]) -> Data?
     func serializeDay(id: Int32, title: String, serializedSections: [Data]) -> Data?
-    func serializeWeek(even: Bool, serializedDays: [Data]) -> Data?
+    func serializeWeek(id: Int32, even: Bool, serializedDays: [Data]) -> Data?
+    func serializeGroup(id: Int32, title: String, serializedWeeks: [Data]) -> Data?
     
 }
 
@@ -22,7 +23,7 @@ class ServerSerializer: ServerSerializerProtocol {
     
     func serializeLesson(id: Int32, title: String, subtitle: String, time: String, professor: String, type: String) -> Data? {
         
-        var lesson = Week.Day.Section.Lesson()
+        var lesson = ProtoLesson()
         
         lesson.id = id
         lesson.title = title
@@ -41,7 +42,7 @@ class ServerSerializer: ServerSerializerProtocol {
     
     func serializeHeader(title: String) -> Data? {
         
-        var header = Week.Day.Section.Header()
+        var header = ProtoHeader()
         
         header.title = title
         
@@ -55,13 +56,13 @@ class ServerSerializer: ServerSerializerProtocol {
     
     func serializeSection(id: Int32, serializedHeader: Data, serializedLessons: [Data]) -> Data? {
         
-        var section = Week.Day.Section()
+        var section = ProtoSection()
         
-        let header = try! Week.Day.Section.Header(serializedData: serializedHeader)
-        var lessons = [Week.Day.Section.Lesson]()
+        let header = try! ProtoHeader(serializedData: serializedHeader)
+        var lessons = [ProtoLesson]()
         
         serializedLessons.forEach { (serializedLesson) in
-            lessons.append(try! Week.Day.Section.Lesson(serializedData: serializedLesson))
+            lessons.append(try! ProtoLesson(serializedData: serializedLesson))
         }
         
         section.id = id
@@ -78,12 +79,12 @@ class ServerSerializer: ServerSerializerProtocol {
     
     func serializeDay(id: Int32, title: String, serializedSections: [Data]) -> Data? {
         
-        var day = Week.Day()
+        var day = ProtoDay()
         
-        var sections = [Week.Day.Section]()
+        var sections = [ProtoSection]()
         
         serializedSections.forEach { (serializedSection) in
-            sections.append(try! Week.Day.Section(serializedData: serializedSection))
+            sections.append(try! ProtoSection(serializedData: serializedSection))
         }
         
         day.id = id
@@ -98,21 +99,44 @@ class ServerSerializer: ServerSerializerProtocol {
         
     }
     
-    func serializeWeek(even: Bool, serializedDays: [Data]) -> Data? {
+    func serializeWeek(id: Int32, even: Bool, serializedDays: [Data]) -> Data? {
         
-        var week = Week()
+        var week = ProtoWeek()
         
-        var days = [Week.Day]()
+        var days = [ProtoDay]()
         
         serializedDays.forEach { (serializedDay) in
-            days.append(try! Week.Day(serializedData: serializedDay))
+            days.append(try! ProtoDay(serializedData: serializedDay))
         }
         
+        week.id = id
         week.even = even
         week.days = days
         
         do {
             return try week.serializedData()
+        } catch {
+            fatalError("\(error)")
+        }
+        
+    }
+    
+    func serializeGroup(id: Int32, title: String, serializedWeeks: [Data]) -> Data? {
+        
+        var group = ProtoGroup()
+        
+        var weeks = [ProtoWeek]()
+        
+        serializedWeeks.forEach { (serializedWeek) in
+            weeks.append(try! ProtoWeek(serializedData: serializedWeek))
+        }
+        
+        group.id = id
+        group.title = title
+        group.weeks = weeks
+        
+        do {
+            return try group.serializedData()
         } catch {
             fatalError("\(error)")
         }
