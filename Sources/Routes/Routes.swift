@@ -35,6 +35,7 @@ class ServerRoutes: ServerRoutesProtocol {
             
             routes.add(method: .get, uri: "/v1/groups/{group_id}/weeks/{even}", handler: try getWeekHandler())
             routes.add(method: .get, uri: "/v1/groups/{group_id}", handler: try getGroupHandler())
+            routes.add(method: .get, uri: "/v1/even", handler: try getEvenHandler())
             
         } catch {
             fatalError("\(error)")

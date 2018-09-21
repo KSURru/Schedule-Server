@@ -106,4 +106,49 @@ extension ServerRoutes: ServerHandlersProtocol {
         }
     }
     
+    func getEvenHandler() throws -> RequestHandler {
+        return {
+            request, response in
+            
+            let collection = self.db.getCollection(name: "even_week")
+            
+            guard let find = collection.find(by: "{ \"monday\" : { \"$exists\": true } }") else {
+                
+                response.setBody(string: "Even Week Not Found")
+                response.completed(status: HTTPResponseStatus.internalServerError)
+                
+                return
+                
+            }
+            
+            if find.isEmpty {
+                
+                response.setBody(string: "Even Week Not Found")
+                response.completed(status: HTTPResponseStatus.internalServerError)
+                
+                return
+                
+            }
+            
+            guard let jsonEvenWeek = find[0] else {
+                
+                response.setBody(string: "Even Week Not Found")
+                response.completed(status: HTTPResponseStatus.internalServerError)
+                
+                return
+                
+            }
+            
+            let evenWeek = try! JSONDecoder().decode(JSONEvenWeek.self, from: jsonEvenWeek.data(using: .utf8)!)
+            
+            let evenTimestamp = evenWeek.monday // in seconds (ex. 1535328000)
+            let currentTimestamp = Int(getNow()) / 1000
+            
+            let even = ( ( currentTimestamp - evenTimestamp ) / 604800 ) % 2 == 0
+            
+            response.completed(status: HTTPResponseStatus.custom(code: even ? 735 : 635, message: even ? "true" : "false" ))
+            
+        }
+    }
+    
 }

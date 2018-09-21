@@ -55,3 +55,10 @@ struct JSONGroup: Codable {
     let weeks: [JSONWeek]
     
 }
+
+struct JSONEvenWeek: Codable {
+    
+    let _id: [String:String]
+    let monday: Int
+    
+}
